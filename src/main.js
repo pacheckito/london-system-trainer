@@ -1208,21 +1208,28 @@ function setupEventListeners() {
 // INIT
 // ============================================================
 function init() {
-  initTheme();
-  loadStats();
-  engine.reset();
-  setupEventListeners();
-  renderSidebar();
-  renderBoard(engine.getPositionAt(0));
-  initStockfish();
-  updateEvalBar(0.3);
-  updateStreakBar();
-  validateOnStartup();
+  try {
+    initTheme();
+    loadStats();
+    engine.reset();
+    setupEventListeners();
+    renderSidebar();
+    renderBoard(engine.getPositionAt(0));
+    initStockfish();
+    updateEvalBar(0.3);
+    updateStreakBar();
+    console.log('[LST] init: pre-validate');
+    validateOnStartup();
+    console.log('[LST] init: post-validate, LINES.length =', LINES.length);
 
-  // Load from URL params if present
-  if (!loadFromURL()) {
-    // Auto-select first line
-    if (LINES.length > 0) selectLine(0);
+    // Load from URL params if present
+    if (!loadFromURL()) {
+      console.log('[LST] init: selecting line 0');
+      if (LINES.length > 0) selectLine(0);
+      console.log('[LST] init: selectLine done');
+    }
+  } catch (e) {
+    console.error('[LST] init error:', e);
   }
 }
 
