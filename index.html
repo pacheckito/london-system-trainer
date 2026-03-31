@@ -1,23 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>London System — Interactive Repertoire Trainer</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♟</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9823;</text></svg>">
 </head>
 <body>
   <div class="app">
     <div class="header">
-      <h1>The London System — Interactive Repertoire</h1>
-      <p style="display:flex; align-items:center; gap:16px;">
-        <span>Click through each move on the board. Opponent mistakes are highlighted in <span style="color:#ff6b6b">red</span>.</span>
+      <div class="header-top">
+        <h1>The London System</h1>
+        <div class="header-actions">
+          <button class="icon-btn" id="pgnExportBtn" title="Export PGN">&#9776; PGN</button>
+          <button class="icon-btn" id="shareBtn" title="Share Position">&#128279;</button>
+          <button class="icon-btn" id="themeToggle" title="Toggle theme">&#9790;</button>
+        </div>
+      </div>
+      <p class="header-subtitle">
+        <span>Click or drag pieces on the board. Mistakes highlighted in <span style="color:var(--accent-red)">red</span>.</span>
         <span class="mode-toggle">
           <button class="mode-btn active" id="studyModeBtn">Study</button>
           <button class="mode-btn" id="quizModeBtn">Quiz Me</button>
         </span>
       </p>
     </div>
+
     <div class="main">
       <div class="sidebar" id="sidebar"></div>
       <div class="content" id="content">
@@ -30,33 +38,45 @@
             <div class="eval-number" id="evalNumber">0.0</div>
             <div class="eval-loading" id="evalLoading" style="display:none">analyzing...</div>
           </div>
-          <div class="board-container">
-            <div class="board" id="board"></div>
+
+          <div class="board-outer">
+            <div class="board-container">
+              <svg class="arrow-svg" id="arrowOverlay" viewBox="0 0 480 480"></svg>
+              <div class="board" id="board"></div>
+              <div class="drag-ghost" id="dragGhost"></div>
+            </div>
             <div class="coords-row" id="coordsRow">
-              <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+              <span>a</span><span>b</span><span>c</span><span>d</span>
+              <span>e</span><span>f</span><span>g</span><span>h</span>
             </div>
             <div id="boardPrompt"></div>
             <div class="controls">
-              <button class="ctrl-btn" id="btnStart" title="Start">⏮</button>
-              <button class="ctrl-btn" id="btnBack" title="Back">◀</button>
-              <button class="ctrl-btn" id="btnForward" title="Forward">▶</button>
-              <button class="ctrl-btn" id="btnEnd" title="End">⏭</button>
-              <button class="ctrl-btn" id="autoBtn" title="Auto-play">⏵ Auto</button>
-              <button class="ctrl-btn" id="flipBtn" title="Flip board">🔄 Flip</button>
+              <button class="ctrl-btn" id="btnStart" title="Start">&#9198;</button>
+              <button class="ctrl-btn" id="btnBack" title="Back">&#9664;</button>
+              <button class="ctrl-btn" id="autoBtn" title="Auto-play">&#9205; Auto</button>
+              <button class="ctrl-btn" id="btnForward" title="Forward">&#9654;</button>
+              <button class="ctrl-btn" id="btnEnd" title="End">&#9197;</button>
+              <button class="ctrl-btn" id="flipBtn" title="Flip board">&#128260; Flip</button>
             </div>
           </div>
+
           <div class="move-panel">
             <h3 id="lineTitle">Select a line</h3>
             <div class="move-list" id="moveList"></div>
             <div class="commentary" id="commentary">Choose a line from the sidebar to begin studying.</div>
           </div>
         </div>
+
+        <div class="streak-bar" id="streakBar"></div>
         <div id="quizPanel" style="display:none"></div>
         <div id="mistakesPanel"></div>
         <div id="tacticsPanel"></div>
       </div>
     </div>
   </div>
+
+  <div class="toast" id="toast"></div>
+
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
