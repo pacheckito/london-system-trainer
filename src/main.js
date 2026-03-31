@@ -1208,29 +1208,30 @@ function setupEventListeners() {
 // INIT
 // ============================================================
 function init() {
-  try {
-    initTheme();
-    loadStats();
-    engine.reset();
-    setupEventListeners();
-    renderSidebar();
-    renderBoard(engine.getPositionAt(0));
-    initStockfish();
-    updateEvalBar(0.3);
-    updateStreakBar();
-    console.log('[LST] init: pre-validate');
-    validateOnStartup();
-    console.log('[LST] init: post-validate, LINES.length =', LINES.length);
+  initTheme();
+  loadStats();
+  engine.reset();
+  setupEventListeners();
+  renderSidebar();
+  renderBoard(engine.getPositionAt(0));
+  initStockfish();
+  updateEvalBar(0.3);
+  updateStreakBar();
 
-    // Load from URL params if present
-    if (!loadFromURL()) {
-      console.log('[LST] init: selecting line 0');
-      if (LINES.length > 0) selectLine(0);
-      console.log('[LST] init: selectLine done');
+  // Validate repertoire (non-blocking)
+  try { validateOnStartup(); } catch (e) { console.warn('Validation error:', e); }
+
+  // Load from URL params or auto-select first line
+  // Use setTimeout to ensure DOM is fully ready
+  setTimeout(() => {
+    try {
+      if (!loadFromURL()) {
+        if (LINES.length > 0) selectLine(0);
+      }
+    } catch (e) {
+      console.error('Line select error:', e);
     }
-  } catch (e) {
-    console.error('[LST] init error:', e);
-  }
+  }, 0);
 }
 
 init();
