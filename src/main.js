@@ -58,14 +58,31 @@ const AUTO_BLACK_DELAY = 400;
 // SOUND EFFECTS (Web Audio API)
 // ============================================================
 let audioCtx = null;
+let audioEnabled = false;
 function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      audioEnabled = true;
+    } catch (e) {
+      audioEnabled = false;
+      return null;
+    }
+  }
   return audioCtx;
 }
+// Enable audio on first user click
+document.addEventListener('click', function enableAudio() {
+  getAudioCtx();
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  document.removeEventListener('click', enableAudio);
+}, { once: true });
 
 function playSound(type) {
+  if (!audioEnabled) return;
   try {
     const ctx = getAudioCtx();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.connect(gain);
@@ -262,7 +279,7 @@ function renderBoard(board, animate = false) {
       }
 
       // Interactive
-      if (quizBoardActive || appMode === 'study') classes += ' interactive';
+      if (quizBoardActive) classes += ' interactive';
 
       // Drag source
       if (dragging && dragFromRow === displayR && dragFromCol === displayC) classes += ' dragging';
@@ -273,14 +290,16 @@ function renderBoard(board, animate = false) {
   }
   el.innerHTML = html;
 
-  // Attach click + drag handlers
-  el.querySelectorAll('.square').forEach(sq => {
-    const row = parseInt(sq.dataset.row);
-    const col = parseInt(sq.dataset.col);
+  // Attach click + drag handlers (only in quiz mode for piece interaction)
+  if (quizBoardActive) {
+    el.querySelectorAll('.square').forEach(sq => {
+      const row = parseInt(sq.dataset.row);
+      const col = parseInt(sq.dataset.col);
 
-    sq.addEventListener('mousedown', (e) => handlePointerDown(e, row, col, board));
-    sq.addEventListener('touchstart', (e) => handleTouchStart(e, row, col, board), { passive: false });
-  });
+      sq.addEventListener('mousedown', (e) => handlePointerDown(e, row, col, board));
+      sq.addEventListener('touchstart', (e) => handleTouchStart(e, row, col, board), { passive: false });
+    });
+  }
 
   // Update arrow overlay
   drawArrow();
@@ -291,17 +310,8 @@ function renderBoard(board, animate = false) {
 // ============================================================
 function handlePointerDown(e, row, col, board) {
   if (e.button !== 0) return;
+  if (!quizBoardActive) return;
   const piece = board[row][col];
-
-  // Determine if we can interact
-  if (appMode === 'quiz' && !quizBoardActive) return;
-  if (appMode === 'study' && currentMoveIndex < 0 && !piece) return;
-
-  // In study mode, only allow clicking forward (not actual piece movement)
-  if (appMode === 'study') {
-    boardClickStudy(row, col);
-    return;
-  }
 
   // Quiz mode: click or start drag
   if (!piece || !isWhitePiece(piece)) {
@@ -335,7 +345,6 @@ function handlePointerDown(e, row, col, board) {
 }
 
 function handleTouchStart(e, row, col, board) {
-  if (appMode === 'study') { boardClickStudy(row, col); return; }
   if (!quizBoardActive) return;
 
   const piece = board[row][col];
