@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>London System â Interactive Repertoire Trainer</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>â</text></svg>">
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>The London System â Interactive Repertoire</h1>
+      <p style="display:flex; align-items:center; gap:16px;">
+        <span>Click through each move on the board. Opponent mistakes are highlighted in <span style="color:#ff6b6b">red</span>.</span>
+        <span class="mode-toggle">
+          <button class="mode-btn active" id="studyModeBtn">Study</button>
+          <button class="mode-btn" id="quizModeBtn">Quiz Me</button>
+        </span>
+      </p>
+    </div>
+    <div class="main">
+      <div class="sidebar" id="sidebar"></div>
+      <div class="content" id="content">
+        <div class="board-section">
+          <div class="eval-container" id="evalContainer">
+            <div class="eval-label" id="evalLabel">EVAL</div>
+            <div class="eval-bar-wrap">
+              <div class="eval-bar-white" id="evalWhite" style="height:50%"></div>
+            </div>
+            <div class="eval-number" id="evalNumber">0.0</div>
+            <div class="eval-loading" id="evalLoading" style="display:none">analyzing...</div>
+          </div>
+          <div class="board-container">
+            <div class="board" id="board"></div>
+            <div class="coords-row" id="coordsRow">
+              <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+            </div>
+            <div id="boardPrompt"></div>
+            <div class="controls">
+              <button class="ctrl-btn" id="btnStart" title="Start">â®</button>
+              <button class="ctrl-btn" id="btnBack" title="Back">â</button>
+              <button class="ctrl-btn" id="btnForward" title="Forward">â¶</button>
+              <button class="ctrl-btn" id="btnEnd" title="End">â­</button>
+              <button class="ctrl-btn" id="autoBtn" title="Auto-play">âµ Auto</button>
+              <button class="ctrl-btn" id="flipBtn" title="Flip board">ð Flip</button>
+            </div>
+          </div>
+          <div class="move-panel">
+            <h3 id="lineTitle">Select a line</h3>
+            <div class="move-list" id="moveList"></div>
+            <div class="commentary" id="commentary">Choose a line from the sidebar to begin studying.</div>
+          </div>
+        </div>
+        <div id="quizPanel" style="display:none"></div>
+        <div id="mistakesPanel"></div>
+        <div id="tacticsPanel"></div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

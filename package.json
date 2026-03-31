@@ -1,0 +1,25 @@
+{
+  "name": "london-system-trainer",
+  "version": "1.0.0",
+  "description": "Interactive chess repertoire trainer for the London System opening",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "chess.js": "^1.0.0-beta.8"
+  },
+  "devDependencies": {
+    "vercel": "^50.37.3",
+    "vite": "^5.4.0"
+  },
+  "keywords": [
+    "chess",
+    "london-system",
+    "opening-trainer",
+    "repertoire"
+  ],
+  "license": "MIT"
+}
